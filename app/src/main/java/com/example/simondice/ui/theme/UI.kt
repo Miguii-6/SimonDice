@@ -27,19 +27,23 @@ import com.example.simondice.MyViewModel
 
 @Composable
 fun Greeting(miModel: MyViewModel) {
+    // Columna principal que contiene los elementos del juego
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Espaciador para separar visualmente los elementos
         Spacer(modifier = Modifier.height(16.dp))
+        // Mostrar la ronda actual
         Row {
             Ronda()
             Spacer(modifier = Modifier.width(16.dp))
-            Record()
+            Score()
 
         }
-
+        // Función para mostrar los botones de colores
         BotonsColores(vModel = miModel)
         Spacer(modifier = Modifier.height(16.dp))
         Row(
@@ -55,7 +59,8 @@ fun Greeting(miModel: MyViewModel) {
 }
 
 @Composable
-fun  Record(){
+fun  Score(){
+    // Mostrar la puntuación record actual
     Text(
         text = "RECORD: ${Data.score.value} ", // Mostrar a puntacion
         color = Color.Black,
@@ -65,6 +70,7 @@ fun  Record(){
 }
 @Composable
 fun Ronda() {
+    // Mostrar el número de ronda actual
     Text(
         text = "RONDA: ${Data.ronda.value} ", // Mostrar el número de ronda
         color = Color.Black,
@@ -77,6 +83,7 @@ fun Ronda() {
 
 @Composable
 fun BotonsColores(vModel: MyViewModel) {
+    // Agrupa los colores en dos filas
     val colorsInTwoRows = Data.Colors.values().toList().chunked(2)
 
     Column(
@@ -84,10 +91,13 @@ fun BotonsColores(vModel: MyViewModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Itera sobre las filas de colores
         colorsInTwoRows.forEach { rowColors ->
             Row {
                 rowColors.forEach { color ->
+                    // Espaciador entre los botones de colores
                     Spacer(modifier = Modifier.width(8.dp))
+                    // Botón de color
                     Boton(color = color.color, miModel = vModel, name = color.colorName)
                 }
             }
@@ -106,7 +116,6 @@ fun Boton(color: MutableState<Color>, miModel: MyViewModel, name: String) {
     Button(
         onClick = {
             //Recogemos el color que hemos pulsado
-            // miModel.aumentarSecuenciaUsuario(Data.colors.indexOf(color))
             if (Data.estado == Data.State.WAITING && miModel.buttonsEnabled) {
                 miModel.guardarSecuenciaUsuario(Data.colores.indexOf(color))
                 miModel.cambiaColorBotonAlPulsar(color)
@@ -135,9 +144,10 @@ fun Boton(color: MutableState<Color>, miModel: MyViewModel, name: String) {
  */
 @Composable
 fun StartButton(miModel: MyViewModel) {
-    //Declaramos un Boton
+    // Botón para iniciar el juego
     Button(
         onClick = {
+            // Lógica para iniciar el juego y cambiar el estado
             miModel.startGame()
             miModel.changeState()
             if (Data.estado == Data.State.SEQUENCE ){
@@ -162,8 +172,10 @@ fun StartButton(miModel: MyViewModel) {
 
 @Composable
 fun Enviar(miModel: MyViewModel) {
+    // Botón para enviar la secuencia
     Button(
         onClick = {
+            // Lógica para enviar la secuencia y verificarla
             if (Data.estado == Data.State.WAITING){
                 if ( miModel.comprobarSecuencia()) {
                     Log.d("corutina", "Secuencia correcta ")
